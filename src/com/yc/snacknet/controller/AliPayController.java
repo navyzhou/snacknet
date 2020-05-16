@@ -32,19 +32,21 @@ public class AliPayController extends BasicController{
 		alipayRequest.setNotifyUrl(AlipayConfig.notify_url);
 
 		//商户订单号，商户网站订单系统中唯一订单号，必填
-		//String out_trade_no = String.valueOf(order.getOno());
 		String out_trade_no = String.valueOf(System.currentTimeMillis());
-		//session.setAttribute("ono", out_trade_no);
 		//付款金额，必填
-		//String total_amount = String.valueOf(order.getPrice());
-		double total_amount = 126.8;
+		String total_amount = "168.00";
 		//订单名称，必填
 		String subject = "源辰零食网";
 
-		alipayRequest.setBizContent("{\"out_trade_no\":\"" + out_trade_no +"\"," 
+		//商品描述，可空
+		String body = "美食在手，快乐我有";
+
+		alipayRequest.setBizContent("{\"out_trade_no\":\""+ out_trade_no +"\"," 
 				+ "\"total_amount\":\""+ total_amount +"\"," 
 				+ "\"subject\":\""+ subject +"\"," 
+				+ "\"body\":\""+ body +"\"," 
 				+ "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
+		
 		String result = "";
 		try {
 			result = alipayClient.pageExecute(alipayRequest).getBody();

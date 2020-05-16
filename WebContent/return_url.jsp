@@ -53,7 +53,8 @@
 
 		out.println("<script>location.href='order.html'</script>");
 	} else {
-		out.println("验签失败");
+		// out.println("验签失败");
+		out.println("<script>location.href='order.html'</script>");
 	}
 	//——请在这里编写您的程序（以上代码仅作参考）——
 %>

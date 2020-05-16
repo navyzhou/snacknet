@@ -69,7 +69,7 @@
 			//付款完成后，支付宝系统发送该交易状态通知
 		}
 	} else {//验证失败
-		out.println("<script>alert('支付失败...');location.href='order.html'</script>");
+		out.println("<script>location.href='order.html'</script>");
 		//调试用，写文本函数记录程序运行情况是否正常
 		//String sWord = AlipaySignature.getSignCheckContentV1(params);
 		//AlipayConfig.logResult(sWord);
