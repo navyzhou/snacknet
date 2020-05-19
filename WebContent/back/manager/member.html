@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>源辰-浏览管理员信息</title>
+<link rel="shortcut icon" href="../../images/yc.png" type="image/x-icon" />
+<link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div class="mt10">
+	<div class="box">
+		<div class="box_border">
+			<div class="box_center">
+				<form id="myform">
+				姓名：<input type="text" id="mname" class="input-text lh30" size="40"/>&nbsp;&nbsp;
+				手机号码：<input type="tel" id="tel"class="input-text lh30" size="40"/>&nbsp;&nbsp;
+				<input type="button" name="button" class="btn btn82 btn_search" onclick="searchMember()" value="查询"/>&nbsp;&nbsp;
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="table" class="mt10">
+	<div class="box span10 oh">
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="list_table">
+			<thead>
+				<tr>
+					<th width="8%">编号</th>
+                   	<th width="10%">昵称</th>
+                   	<th width="10%">姓名</th>
+                   	<th width="12%">联系方式</th>
+                   	<th width="20%">注册邮箱</th>
+                   	<th width="20%">注册时间</th>
+                   	<th>操作</th>
+                </tr>
+             </thead>
+             <tbody id="member_info" align="center">
+				<!-- <tr>
+					<td>1001</td>
+					<td>源辰</td>
+					<td>navy</td>
+					<td>15096098010</td>
+					<td>541155580@qq.com</td>
+					<td>2018-12-12</td>
+					<td><a href=''>[重置密码]</a>&nbsp;&nbsp;<a href='' class="red">[冻结]</a></td>
+				</tr>
+				 -->
+             </tbody>
+		</table>
+        <div class="page mt10">
+		<div class="pagination">
+            <ul id ="pagination_info">
+			</ul>
+		</div>
+        </div>
+	</div>
+</div>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript">
+var page = 1;
+var rows = 10;
+var totalPage = 1;
+$(function(){
+	$.post("../../member",{op:"findByPageFirst", page: page, rows: rows}, result => {
+		totalPage = Math.ceil(result.code / rows);
+		showPage(); // 显示分页下标
+		memberShow(result.data); // 显示数据
+	}, "json")
+})
+
+function memberShow(rows) {
+	var str = "";
+	$.each(rows, function(index, item) {
+		str += "<tr><td>" + item.mno + "</td><td>" + item.nickname + "</td><td>" + item.realname + "</td>";
+		str += "<td>" + item.tel + "</td><td>" + item.email + "</td><td> " + item.regdate + "</td>";
+		str += "<td><a href='javascript:resetPwd(" + item.mno + ")'>[重置密码]</a>&nbsp;&nbsp;";
+		if (item.status == 1) { // 说明是正常
+			str += "<a href='javascript:void(0)' class='red' onclick='changeStatus(this, 0)'>[冻结]</a></td>"
+		} else {
+			str += "<a href='javascript:void(0)' class='green' onclick='changeStatus(this, 1)'>[解冻]</a></td>"
+		}
+		str += "</tr>";
+	})
+	$("#member_info").html("").append($(str));
+	$("#pagination_info>li").removeClass("active");
+	if (page == 1) {
+		$("#pagination_info>li").eq(0).addClass("active");
+	}
+	if (page == totalPage) {
+		$("#pagination_info>li").last().addClass("active");
+	}
+	$("#pagination_info>li").eq(page).addClass("active");
+}
+
+function showPage() {
+	var str = '<li class="first-child active"><a href="javascript:void(0)" onclick="findByPage(this, 1)">首页</a></li>';
+	for (var i = 1; i <= totalPage; i ++) {
+		if (i == page) {
+			str += '<li class="active">';
+		} else {
+			str += '<li>';
+		}
+		str += '<a href="javascript:void(0)" onclick="findByPage(this, ' + i + ')">' + i + '</a></li>';
+	}
+	str += '<li class="last-child"><a href="javascript:void(0)" onclick="findByPage(this, ' + totalPage + ')">末页</a></li>';
+	$("#pagination_info").html("").append($(str));
+}
+
+function findByPage(obj, flag) {
+	if ($(obj).parent().hasClass("active")){ // 如果点击的是当前页，则直接返回
+		return;
+	}
+	page = flag;
+	var mname = $.trim($("#mname").val());
+	var tel = $.trim($("#tel").val());
+	$.post("../../member",{op:"findByPage", page: page, rows: rows, nickName:mname, tel:tel}, result => {
+		memberShow(result); // 显示数据
+	}, "json");
+}
+
+function searchMember() {
+	page = 1;
+	var mname = $.trim($("#mname").val());
+	var tel = $.trim($("#tel").val());
+	$.post("../../member",{op:"findByPageFirst", page: page, rows: rows, nickName:mname, tel:tel}, result => {
+		totalPage = Math.ceil(result.code / rows);
+		showPage(); // 显示分页下标
+		memberShow(result.data); // 显示数据
+	}, "json");
+}
+</script>
+</body>
+</html>

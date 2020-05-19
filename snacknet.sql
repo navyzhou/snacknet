@@ -7,10 +7,11 @@ create table if not exists adminInfo(
 	aid int primary key auto_increment,
 	aname varchar(100) not null unique, -- 管理员昵称
 	pwd varchar(100) not null, -- 密码
-	tel varchar(15) unique -- 联系方式
+	tel varchar(15) unique, -- 联系方式
+	status int
 ) ENGINE = InnoDB AUTO_INCREMENT=101 default charset=utf8 collate=utf8_bin;
 
-insert into adminInfo values(0, 'navy', md5('123321'), '15096098088');
+insert into adminInfo values(0, 'navy', md5('123321'), '15096098088', 1);
 
 -- 创建会员信息表
 create table if not exists memberInfo(
@@ -29,7 +30,6 @@ create table if not exists memberInfo(
 create table if not exists goodsType(
 	tno int primary key auto_increment,
 	tname varchar(100) not null unique,
-	pic varchar(100), -- 类型图片
 	status int -- 状态
 )ENGINE = InnoDB AUTO_INCREMENT=101 default charset=utf8 collate=utf8_bin;
 

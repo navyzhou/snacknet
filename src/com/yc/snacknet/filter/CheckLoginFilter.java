@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebFilter(filterName="CheckLoginFilter",value="/back/*",initParams=@WebInitParam(name="errorPage", value="login.html"))
+@WebFilter(filterName="CheckLoginFilter",value="/back/manager/*",initParams=@WebInitParam(name="errorPage", value="back/index.html"))
 public class CheckLoginFilter implements Filter{
 	private String path = "index.html";
 	@Override
@@ -29,11 +29,11 @@ public class CheckLoginFilter implements Filter{
 		HttpServletResponse response = (HttpServletResponse) arg1;
 		
 		HttpSession session = request.getSession();
-		if (session.getAttribute("currentLoginUser") == null) { // 说明用户没有登录
+		if (session.getAttribute("currentLoginAdmin") == null) { // 说明用户没有登录
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter out = response.getWriter();
 			String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath() +"/";
-			out.print("<script>alert('请先登录...');location.href='" + basePath + path + "';</script>");
+			out.print("<script>alert('请先登录...');window.parent.location.href='" + basePath + path + "';</script>");
 			out.flush();
 			out.close();
 		} else { // 如果已经登录，则交给下一个过滤器过滤

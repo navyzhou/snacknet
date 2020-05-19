@@ -32,9 +32,46 @@ public class MemberInfoController extends BasicController{
 			login(request, response);
 		} else if ("check".equals(op)) { // 说明是检查登录的方法
 			check(request, response);
-		}
+		} else if ("findByPageFirst".equals(op)) { // 后台第一次分页查询
+			findByPageFirst(request, response);
+		} else if ("findByPage".equals(op)) {  // 后台分页查询
+			findByPage(request, response);
+		} 
 	
 	}
+
+	/**
+	 * 后天管理员分页查询
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	private void findByPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		int page = Integer.parseInt(request.getParameter("page"));
+		int rows = Integer.parseInt(request.getParameter("rows"));
+		
+		String nickName = request.getParameter("nickName");
+		String tel = request.getParameter("tel");
+		MemberInfoDao memberInfoDao = new MemberInfoDao();
+		this.send(response, memberInfoDao.findByCondition(nickName, tel, page, rows));
+	}
+
+	/**
+	 * 后台管理员第一次分页查询
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	private void findByPageFirst(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		int page = Integer.parseInt(request.getParameter("page"));
+		int rows = Integer.parseInt(request.getParameter("rows"));
+		
+		String nickName = request.getParameter("nickName");
+		String tel = request.getParameter("tel");
+		MemberInfoDao memberInfoDao = new MemberInfoDao();
+		this.send(response, memberInfoDao.total(nickName, tel), memberInfoDao.findByCondition(nickName, tel, page, rows));
+	}
+	
 
 	/**
 	 * 检查登录的方法

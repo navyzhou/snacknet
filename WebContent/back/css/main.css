@@ -395,3 +395,8 @@ input.ext_btn_big,button.ext_btn_big{
 	top: 80px;
 	left: 460px;
 }
+
+.green {color: green}
+.green:hover {color: #06A906}
+.red {color: red}
+.red:hover{color: #E38C8C}
