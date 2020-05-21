@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>源辰-浏览商品信息</title>
+<link rel="shortcut icon" href="../../images/yc.png" type="image/x-icon" />
+<link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div class="mt10">
+	<div class="box">
+		<div class="box_border">
+			<div class="box_center">
+				<form id="myform">
+					商品类型：<select class="select" name="tno" id="goodsType">
+							
+						</select>&nbsp;&nbsp;
+					商品名称：<input type="tel" id="gname" class="input-text lh30" size="40" />&nbsp;&nbsp;
+					<input type="button" name="button" class="btn btn82 btn_search"
+						onclick="searchGoods()" value="查询" />&nbsp;&nbsp;
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="table" class="mt10">
+	<div class="box span10 oh">
+		<table width="100%" border="0" cellpadding="0" cellspacing="0"
+			class="list_table">
+			<thead>
+				<tr>
+					<th width="8%">编号</th>
+					<th width="20%">名称</th>
+					<th width="10%">类型</th>
+					<th width="10%">商品价格</th>
+					<th width="10%">库存</th>
+					<th width="8%">单位</th>
+					<th width="8%">净重</th>
+					<th width="8%">保质期</th>
+					<th width="8%">状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody id="goods_info" align="center">
+				<!--  <tr>
+					<td>1001</td>
+					<td>安慕希风味酸牛奶</td>
+					<td>奶制品</td>
+					<td>68.8</td>
+					<td>120</td>
+					<td>箱</td>
+					<td>500G</td>
+					<td>6个月</td>
+					<td class="green">已上架</td>
+					<td><a href='' class='red'>[下架]</a>&nbsp;&nbsp;<a href=''>[详细]</a></td>
+				</tr> -->
+			</tbody>
+		</table>
+		<div class="page mt10">
+			<div class="pagination">
+				<ul id="pagination_info">
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript">
+var page = 1;
+var rows = 10;
+var totalPage = 1;
+$(function(){
+	$.get("../../type", {op:"finds"}, result => {
+		var str = "<option value=''></option>";
+		$.each(result, function(index, item) {
+			str += "<option value='" + item.tno + "'>" + item.tname + "</option>";
+		})
+		$("#goodsType").html("").append($(str));
+	}, "json");
+	
+	$.post("../../goods",{op:"findByPageFirst", page: page, rows: rows}, result => {
+		totalPage = Math.ceil(result.code / rows);
+		showPage(); // 显示分页下标
+		showGoods(result.data); // 显示数据
+	}, "json")
+})
+
+// 显示商品信息
+function showGoods(data) {
+	var str = "";
+	$.each(data, function(index, item) {
+		str += "<tr><td>" + item.gno + "</td><td>" + item.gname + "</td><td>" + item.tname + "</td><td>" + item.price + "</td>";
+		str += "<td>" + item.balance + "</td><td>" + item.unit + "</td><td>" + item.weight + "</td><td>" + item.qperied + "</td>";
+		if (item.status == 1) {
+			str += "<td class='green'>已上架</td><td><a href='javascript:void(0)' onclick='changeStatus(this," + item.gno + ", 0)' class='red'>[下架]</a>";
+		} else {
+			str += "<td class='red'>已下架</td><td><a href='javascript:void(0)' onclick='changeStatus(this," + item.gno + ", 1)' class='green'>[上架]</a>";
+		}
+		str += "&nbsp;&nbsp;<a href='./../../detail.html#" + item.gno + "' target='_blank'>[详细]</a></td></tr>";
+	})
+	$("#goods_info").html("").append($(str));
+	
+	$("#pagination_info>li").removeClass("active");
+	if (page == 1) {
+		$("#pagination_info>li").eq(0).addClass("active");
+	}
+	if (page == totalPage) {
+		$("#pagination_info>li").last().addClass("active");
+	}
+	$("#pagination_info>li").eq(page).addClass("active");
+}
+
+function showPage() {
+	var str = '<li class="first-child active"><a href="javascript:void(0)" onclick="findByPage(this, 1)">首页</a></li>';
+	for (var i = 1; i <= totalPage; i ++) {
+		if (i == page) {
+			str += '<li class="active">';
+		} else {
+			str += '<li>';
+		}
+		str += '<a href="javascript:void(0)" onclick="findByPage(this, ' + i + ')">' + i + '</a></li>';
+	}
+	str += '<li class="last-child"><a href="javascript:void(0)" onclick="findByPage(this, ' + totalPage + ')">末页</a></li>';
+	$("#pagination_info").html("").append($(str));
+}
+
+function findByPage(obj, flag) {
+	if ($(obj).parent().hasClass("active")){ // 如果点击的是当前页，则直接返回
+		return;
+	}
+	page = flag;
+	var gname = $.trim($("#gname").val());
+	var tno = $.trim($("#goodsType").val());
+	$.post("../../goods",{op:"findByPage", page: page, rows: rows, tno:tno, gname:gname}, result => {
+		showGoods(result); // 显示数据
+	}, "json");
+}
+
+function searchGoods() {
+	page = 1;
+	var gname = $.trim($("#gname").val());
+	var tno = $.trim($("#goodsType").val());
+	$.post("../../goods",{op:"findByPageFirst", page: page, rows: rows, tno:tno, gname:gname}, result => {
+		totalPage = Math.ceil(result.code / rows);
+		showPage(); // 显示分页下标
+		showGoods(result.data); // 显示数据
+	}, "json")
+}
+
+/**
+ * 修改状态
+ */
+ function changeStatus(obj, gno, status) {
+	var temp = ["下架", "上架"];
+	if (!confirm("您确定要 [" + temp[status] + "] 此商品吗?")) {
+		return;
+	}
+	$.post("../../goods", {op: "updates", gno: gno, status: status}, data => {
+		data = parseInt($.trim(data));
+		if (data > 0) {
+			if (status == 1) { // 说明是解冻
+				$(obj).parent().prev("td").attr("class", "green").text("已上架");
+				$(obj).attr("onclick", "changeStatus(this, " + gno + ", 0)").text("[下架]").attr("class", "red");
+			} else {
+				$(obj).parent().prev("td").attr("class", "red").text("已下架");
+				$(obj).attr("onclick", "changeStatus(this, " + gno + ", 1)").text("[上架]").attr("class", "green");
+			}
+			return;
+		}
+		alert("操作失败，请稍后重试...");
+	}, "text");	
+}
+</script>
+</body>
+</html>

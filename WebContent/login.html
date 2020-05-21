@@ -84,10 +84,11 @@ function login() {
 		data = parseInt($.trim(data));
 		if (data == 200) {
 			// 现获取是从哪个页面跳出来的
-			let temp = document.referrer; // 获取来源路径
+			var temp = document.referrer; // 获取来源路径
+			
 			// 如果是直接访问的登录界面或者是从注册界面来的，那么默认访问首页
 			if (temp == "" || temp == undefined || temp.indexOf("register.html")) {
-				location.href="index.html";
+				location.href = "index.html";
 			} else {
 				history.go(-1);
 			}

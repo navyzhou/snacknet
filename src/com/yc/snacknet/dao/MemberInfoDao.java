@@ -97,4 +97,28 @@ public class MemberInfoDao {
 		}
 		return db.total(sql, params);
 	}
+	
+	/**
+	 * 修改状态
+	 * @param mno
+	 * @param flag
+	 * @return
+	 */
+	public int update(int mno, int flag) {
+		DBHelper db = new DBHelper();
+		String sql = "update memberinfo set status = ? where mno = ?";
+		return db.update(sql, flag, mno);
+	}
+	
+	/**
+	 * 重置密码
+	 * @param pwd
+	 * @param mno
+	 * @return
+	 */
+	public int resetPwd(int mno) {
+		DBHelper db = new DBHelper();
+		String sql = "update memberinfo set pwd = md5(right(tel, 6)) where mno = ?";
+		return db.update(sql, mno);
+	}
 }

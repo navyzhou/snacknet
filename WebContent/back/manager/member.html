@@ -13,9 +13,10 @@
 		<div class="box_border">
 			<div class="box_center">
 				<form id="myform">
-				姓名：<input type="text" id="mname" class="input-text lh30" size="40"/>&nbsp;&nbsp;
-				手机号码：<input type="tel" id="tel"class="input-text lh30" size="40"/>&nbsp;&nbsp;
-				<input type="button" name="button" class="btn btn82 btn_search" onclick="searchMember()" value="查询"/>&nbsp;&nbsp;
+					姓名：<input type="text" id="mname" class="input-text lh30" size="40" />&nbsp;&nbsp;
+					手机号码：<input type="tel" id="tel" class="input-text lh30" size="40" />&nbsp;&nbsp;
+					<input type="button" name="button" class="btn btn82 btn_search"
+						onclick="searchMember()" value="查询" />&nbsp;&nbsp;
 				</form>
 			</div>
 		</div>
@@ -23,37 +24,39 @@
 </div>
 <div id="table" class="mt10">
 	<div class="box span10 oh">
-		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="list_table">
+		<table width="100%" border="0" cellpadding="0" cellspacing="0"
+			class="list_table">
 			<thead>
 				<tr>
 					<th width="8%">编号</th>
-                   	<th width="10%">昵称</th>
-                   	<th width="10%">姓名</th>
-                   	<th width="12%">联系方式</th>
-                   	<th width="20%">注册邮箱</th>
-                   	<th width="20%">注册时间</th>
-                   	<th>操作</th>
-                </tr>
-             </thead>
-             <tbody id="member_info" align="center">
-				<!-- <tr>
-					<td>1001</td>
-					<td>源辰</td>
-					<td>navy</td>
-					<td>15096098010</td>
-					<td>541155580@qq.com</td>
-					<td>2018-12-12</td>
-					<td><a href=''>[重置密码]</a>&nbsp;&nbsp;<a href='' class="red">[冻结]</a></td>
+					<th width="10%">昵称</th>
+					<th width="10%">姓名</th>
+					<th width="12%">联系方式</th>
+					<th width="20%">注册邮箱</th>
+					<th width="20%">注册时间</th>
+					<th width="8%">状态</th>
+					<th>操作</th>
 				</tr>
-				 -->
-             </tbody>
+			</thead>
+			<tbody id="member_info" align="center">
+				<!-- <tr>
+				<td>1001</td>
+				<td>源辰</td>
+				<td>navy</td>
+				<td>15096098010</td>
+				<td>541155580@qq.com</td>
+				<td>2018-12-12</td>
+				<td><a href=''>[重置密码]</a>&nbsp;&nbsp;<a href='' class="red">[冻结]</a></td>
+			</tr>
+			 -->
+			</tbody>
 		</table>
-        <div class="page mt10">
-		<div class="pagination">
-            <ul id ="pagination_info">
-			</ul>
+		<div class="page mt10">
+			<div class="pagination">
+				<ul id="pagination_info">
+				</ul>
+			</div>
 		</div>
-        </div>
 	</div>
 </div>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
@@ -74,11 +77,16 @@ function memberShow(rows) {
 	$.each(rows, function(index, item) {
 		str += "<tr><td>" + item.mno + "</td><td>" + item.nickname + "</td><td>" + item.realname + "</td>";
 		str += "<td>" + item.tel + "</td><td>" + item.email + "</td><td> " + item.regdate + "</td>";
+		if (item.status == 1) {
+			str += "<td class='green'>正常</td>";
+		} else {
+			str += "<td class='red'>冻结</td>";
+		}
 		str += "<td><a href='javascript:resetPwd(" + item.mno + ")'>[重置密码]</a>&nbsp;&nbsp;";
 		if (item.status == 1) { // 说明是正常
-			str += "<a href='javascript:void(0)' class='red' onclick='changeStatus(this, 0)'>[冻结]</a></td>"
+			str += "<a href='javascript:void(0)' class='red' onclick='changeStatus(this, " + item.mno + ", 0)'>[冻结]</a></td>"
 		} else {
-			str += "<a href='javascript:void(0)' class='green' onclick='changeStatus(this, 1)'>[解冻]</a></td>"
+			str += "<a href='javascript:void(0)' class='green' onclick='changeStatus(this, " + item.mno + ", 1)'>[解冻]</a></td>"
 		}
 		str += "</tr>";
 	})
@@ -128,6 +136,48 @@ function searchMember() {
 		showPage(); // 显示分页下标
 		memberShow(result.data); // 显示数据
 	}, "json");
+}
+
+/**
+ * 修改状态
+ */
+function changeStatus(obj, mno, flag) {
+	var temp = ["冻结", "解冻"];
+	if (!confirm("您确定要 " + temp[flag] + " 账号 [ " + mno + " ] 吗?")) {
+		return;
+	}
+	
+	$.post("../../member",{op:"update", mno: mno, flag: flag}, data => {
+		data = parseInt($.trim(data));
+		if (data > 0) {
+			if (flag == 1) { // 说明是解冻
+				$(obj).parent().prev("td").attr("class", "green").text("正常");
+				$(obj).attr("onclick", "changeStatus(this, " + mno + ", 0)").text("[冻结]").attr("class", "red");
+			} else {
+				$(obj).parent().prev("td").attr("class", "red").text("冻结");
+				$(obj).attr("onclick", "changeStatus(this, " + mno + ", 1)").text("[解冻]").attr("class", "green");
+			}
+		} else {
+			alert("操作失败，请稍后重试...");
+		}
+	}, "text");
+}
+
+/**
+ * 重置密码
+ */
+function resetPwd(mno) {
+	if (!confirm("您确定要重置账号 [ " + mno + " ] 的密码吗?")) {
+		return;
+	}
+	$.post("../../member",{op:"resetPwd", mno:mno}, data => {
+		data = parseInt($.trim(data));
+		if (data > 0) {
+			alert("重置密码成功，初始密码为改会员注册手机号码后 6 位，请及时提醒用户修改....");	
+		} else {
+			alert("操作失败，请稍后重试...");
+		}
+	}, "text");
 }
 </script>
 </body>

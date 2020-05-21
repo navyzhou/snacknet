@@ -94,10 +94,10 @@ function changeStatus(obj, aid, status) {
 		data = parseInt($.trim(data));
 		if (data > 0) {
 			if (status == 1) { // 说明是解冻
-				$(obj).parent().prev("td").html("<font color='green'>正常</font>");
+				$(obj).parent().prev("td").attr("class", "green").text("正常");
 				$(obj).attr("onclick", "changeStatus(this, " + aid + ", 0)").text("[冻结]");
 			} else {
-				$(obj).parent().prev("td").html("<font color='red'>冻结</font>");
+				$(obj).parent().prev("td").attr("class", "red").text("冻结");
 				$(obj).attr("onclick", "changeStatus(this, " + aid + ", 1)").text("[解冻]");
 			}
 			return;

@@ -36,6 +36,13 @@
 	font-size:14px;
 	margin:0 auto 20px;
 }
+
+.goods_details_pic {
+	width: 400px;
+	height: 100%;
+	overflow: hidden;
+}
+
 .goods_details_pic img{
 	width:350px;
 	height:350px;

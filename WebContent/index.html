@@ -19,9 +19,8 @@
     	<a href="#" target="_blank" class="location">衡阳</a>
         
         <div class="header-info">
-            <div class="login-info">
-            	<a href="login.html" title="点击登录">您好，请登录</a>
-                <a href="register.html" title="点击注册"> 免费注册 </a>
+            <div class="login-info" id="login_info">
+            	
             </div>
             
             <div class="person-info">
@@ -49,26 +48,18 @@
         <div class="search_right">
         	<div class="search_top">
                 <div class="search_div">
-                    <input type="search" class="search-ipt" placeholder="请输入要搜索的内容" />
-                    <input type="button" class="search-btn"/>  
+                    <input type="search" class="search-ipt" placeholder="请输入要搜索的内容" id="search_content"/>
+                    <input type="button" class="search-btn" onclick="searchGoods()"/>  
                 </div>
                 <div class="buycart">
-                	<i class="iconfont">0</i>
+                	<i class="iconfont" id="iconfont">0</i>
                     <a href="cart.html" target="_blank">我的购物车</a>
                 </div>
             </div>
             
             <div class="search_item" id="search_item">
-            	<a href="#" class="selected">全部</a>
-            	<a href="#">干果</a>
-                <a href="#">麻辣</a>
-                <a href="#">水果</a>
-                <a href="#">饼干</a>
-                <a href="#">奶制品</a>
-                <a href="#">饮料</a>
-                <a href="#">干果</a>
-                <a href="#">麻辣</a>
-                <a href="#">水果</a>
+            	<!-- <a href="#" class="selected">全部</a>
+            	<a href="#">干果</a> -->
             </div>
         </div>
     </div>
@@ -91,326 +82,40 @@
 <article>
     <div class="view_title">
     	<a href="" class="view_price price_down">价格</a>
-        <input type="number" id="start_price" class="price_ipt" min="1"/>
+        <input type="number" id="start_price" class="price_ipt" min="1" onblur="findByPrice()"/>
         <span>-</span>
-        <input type="number" id="end_price" class="price_ipt" min="1"/>
+        <input type="number" id="end_price" class="price_ipt" min="1" onblur="findByPrice()"/>
     </div>
     
     <div class="view_goods">
     	<ul id="view_goods">
-        	<li class="hot_box">
+        	<!--  <li class="hot_box">
             	<i class="all_i i_t"></i>
 				<i class="all_i i_r"></i>
 				<i class="all_i i_b"></i>
 				<i class="all_i i_l"></i>
                 <a href="detail.html" target="_blank" class="hot_warp">
                 	<img src="images/goods/good01.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
+                    <span>房间里的咖啡店</span>
                 </a>
                 <div class="view_info">
                 	<span class="price">255</span>
                     <span>/ 500G</span>
                     <span class="buy">&nbsp;</span>
                 </div>
-            </li>
-        	<li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good02.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good03.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good04.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good05.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good06.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good07.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good08.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good09.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good10.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good11.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good12.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good13.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good14.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good15.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good11.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good12.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good13.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good14.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
-            <li class="hot_box">
-            	<i class="all_i i_t"></i>
-				<i class="all_i i_r"></i>
-				<i class="all_i i_b"></i>
-				<i class="all_i i_l"></i>
-                <a href="detail.html" target="_blank" class="hot_warp">
-                	<img src="images/goods/good15.jpg" title="好吃"/>
-                    <p>房间里的咖啡店</p>
-                </a>
-                <div class="view_info">
-                	<span class="price">255</span>
-                    <span>/ 500G</span>
-                    <span class="buy">&nbsp;</span>
-                </div>
-            </li>
+            </li>-->
         </ul>
     </div>
     
-    <div class="page_info">
-    	<a href="" class="pre_page">上一页</a>
-        <a href="" class="active">1</a>
-        <a href="">2</a>
-        <a href="">3</a>
-        <a href="">4</a>
-        <a href="" class="next_page">下一页</a>
+    <div class="page_info" id="pagination_info">
+    	
     </div>
 </article>
-
+<div class="popup_con">
+	<div class="popup">
+		<p id="popup_info"></p>
+	</div>
+</div>  
 <footer>
 	<div class="foot_link">
         <a href="#">关于我们</a> <span> | </span>
@@ -425,5 +130,135 @@
 <script src="js/jquery-ui.min.js" type="text/javascript"></script>
 <script src="js/slide.js" type="text/javascript"></script>
 <script src="js/index.js" type="text/javascript"></script>
+<script src="js/checkLogin.js" type="text/javascript"></script>
+<script src="js/addCart.js" type="text/javascript"></script>
+<script type="text/javascript">
+var page = 1;
+var rows = 20;
+var totalPage = 1;
+$(function(){
+	$.get("type", {op:"finds"}, result => {
+		var str = '<a href="javascript:void(0)" class="selected" data-id="" onclick="findByTno(this, 0)">全部</a>';
+		$.each(result, function(index, item) {
+			str += '<a href="javascript:void(0)" data-id="' + item.tno + '" onclick="findByTno(this, ' + item.tno + ')">' + item.tname + '</a>';
+		})
+		$("#search_item").html("").append($(str));
+	}, "json");
+	
+	$.post("goods",{op:"findFirst", page: page, rows: rows}, result => {
+		totalPage = Math.ceil(result.code / rows);
+		showPage(); // 显示分页下标
+		showGoods(result.data); // 显示数据
+	}, "json")
+})
+
+// 显示商品信息
+function showGoods(data) {
+	var str = "";
+	var pics = [];
+	$.each(data, function(index, item) {
+		str += '<li class="hot_box"><i class="all_i i_t"></i><i class="all_i i_r"></i><i class="all_i i_b"></i><i class="all_i i_l"></i>';
+		str += '<a href="detail.html#' + item.gno + '" target="_blank" class="hot_warp">';
+		pics = item.pics.split(";");
+		str += '<img src="' + pics[0] + '" title="' + item.gname + '"/><span>' + item.gname + '</span></a><div class="view_info">'
+     	str += '<span class="price">' + item.price + '</span><span>/ ' + item.weight + '</span><span class="buy" onclick="addCart(' + item.gno + ')">&nbsp;</span></div></li>';
+	})
+	$("#view_goods").html("").append($(str));
+	
+	$("#pagination_info>a").removeClass("active");
+	if (page == 1) {
+		$("#pagination_info>a").eq(0).addClass("active");
+	}
+	if (page == totalPage) {
+		$("#pagination_info>a").last().addClass("active");
+	}
+	$("#pagination_info>a").eq(page).addClass("active");
+}
+
+function showPage() {
+	var str = '<a href="javascript:void(0)" class="active" onclick="findByPage(this, 1)">首页</a>';
+	for (var i = 1; i <= totalPage; i ++) {
+		if (i == page) {
+			str += '<a href="javascript:void(0)" class="active" onclick="findByPage(this, ' + i + ')">' + i + '</a>';
+		} else {
+			str += '<a href="javascript:void(0)" onclick="findByPage(this, ' + i + ')">' + i + '</a>';
+		}
+	}
+	if (page == totalPage) {
+		str += '<a href="javascript:void(0)" class="active" onclick="findByPage(this, ' + totalPage + ')">末页</a>';
+	} else {
+		str += '<a href="javascript:void(0)" onclick="findByPage(this, ' + totalPage + ')">末页</a>';
+	}
+	$("#pagination_info").html("").append($(str));
+}
+
+function findByPage(obj, flag) {
+	if ($(obj).parent().hasClass("active")){ // 如果点击的是当前页，则直接返回
+		return;
+	}
+	page = flag;
+	
+	var sprice = $.trim($("#start_price").val());
+	var eprice = $.trim($("#end_price").val());
+	var tno =$("#search_item>a[class='selected']").data("id");
+	var gname = $.trim($("#search_content").val());
+	
+	$.post("goods",{op:"finds", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, result => {
+		showGoods(result); // 显示数据
+	}, "json");
+}
+
+function searchGoods() {
+	var gname = $.trim($("#search_content").val());
+	if (gname == "") {
+		return;
+	}
+	
+	page = 1;
+	
+	var sprice = $.trim($("#start_price").val());
+	var eprice = $.trim($("#end_price").val());
+	var tno =$("#search_item>a[class='selected']").data("id");
+	
+	$.post("goods",{op:"findFirst", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, result => {
+		totalPage = Math.ceil(result.code / rows);
+		showPage(); // 显示分页下标
+		showGoods(result.data); // 显示数据
+	}, "json");
+}
+
+function findByTno(obj, tno) {
+	if (tno == "0"){
+		tno = "";
+	}
+	page = 1;
+	var sprice = $.trim($("#start_price").val());
+	var eprice = $.trim($("#end_price").val());
+	var gname = $.trim($("#search_content").val());
+		
+	$.post("goods",{op:"findFirst", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, result => {
+		totalPage = Math.ceil(result.code / rows);
+		showPage(); // 显示分页下标
+		showGoods(result.data); // 显示数据
+	}, "json");
+
+	$("#search_item>a").removeClass("selected");
+	$(obj).attr("class", "selected");
+}
+
+function findByPrice() {
+	page = 1;
+	var sprice = $.trim($("#start_price").val());
+	var eprice = $.trim($("#end_price").val());
+	var tno =$("#search_item>a[class='selected']").data("id");
+	var gname = $.trim($("#search_content").val());
+	
+	$.post("goods",{op:"findFirst", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, result => {
+		totalPage = Math.ceil(result.code / rows);
+		showPage(); // 显示分页下标
+		showGoods(result.data); // 显示数据
+	}, "json");
+}
+</script>
 </body>
 </html>

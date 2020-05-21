@@ -46,6 +46,7 @@ create table if not exists goodsInfo(
 	qperied varchar(50), -- 保质期
 	weight varchar(50), -- 净重
 	descr text, -- 详细介绍
+	status int, -- 商品状态
 	constraint FK_goodsInfo_tno foreign key(tno) references goodsType(tno)
 )ENGINE = InnoDB AUTO_INCREMENT=1 default charset=utf8 collate=utf8_bin;
 

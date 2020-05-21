@@ -312,13 +312,12 @@ public class DBHelper {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-
+		
 		try {
 			con = this.getConnection(); // 获取连接
 			pstmt = con.prepareStatement(sql); // 预编译语句
 			this.setParams(pstmt, params); // 给预编译语句中的占位符赋值
 			rs = pstmt.executeQuery(); // 执行查询
-
 
 			// 如果获取结果集中列的类名 -> 取到列名后我们存到一个数组中，便于后面的循环取值 -> 如何确定数组的大小?
 			String[] colNames = this.getColumnNames(rs);

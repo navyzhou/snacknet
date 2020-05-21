@@ -6,10 +6,6 @@
 <link rel="shortcut icon" href="../../images/yc.png" type="image/x-icon" />
 <link rel="stylesheet" href="../css/common.css">
 <link rel="stylesheet" href="../css/main.css">
-<script type="text/javascript" src="../js/jquery.min.js"></script>
-<script type="text/javascript">
-
-</script>
 </head>
 <body>
 <div id="forms" class="mt10">
@@ -18,7 +14,7 @@
 			<div class="box_center">
 				<form id="myform">
 				类型名称：<input type="text" id="tname" class="input-text lh30" size="40"/>&nbsp;&nbsp;
-				<input type="button" name="button" class="btn btn82 btn_save2" onclick="addNewsTypeInfo()" value="添加"/>&nbsp;&nbsp;
+				<input type="button" name="button" class="btn btn82 btn_save2" onclick="addGoodsType()" value="添加"/>&nbsp;&nbsp;
 				</form>
 			</div>
 		</div>
@@ -31,39 +27,77 @@
 				<tr>
                    	<th width="25%">编号</th>
 					<th width="30%">名称</th>
-                   	<th width="10%">状态</th>
+                   	<th width="20%">状态</th>
                    	<th>操作</th>
                 </tr>
              </thead>
              <tbody id="goodstype_info" align="center">
-				<tr>
-					<td>1001</td>
-					<td>新鲜水果</td>
-					<td>正常</td>
-					<td>修改</td>
-				</tr>
-				<tr>
-					<td>1001</td>
-					<td>新鲜水果</td>
-					<td>正常</td>
-					<td>修改</td>
-				</tr>
+             
              </tbody>
 		</table>
-		<div class="page mt10">
-		<div class="pagination">
-            <ul>
-                <li class="first-child"><a href="#">首页</a></li>
-                <li class="disabled"><span>上一页</span></li>
-                <li class="active"><span>1</span></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">下一页</a></li>
-                <li class="last-child"><a href="#">末页</a></li>
-            </ul>
-		</div>
-        </div>
 	</div>
 </div>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	finds();
+})
 
+function finds() {
+	var str = "";
+	$.get("../../type", {op:"finds"}, result => {
+		$.each(result, function(index, item) {
+			str += "<tr><td>" + item.tno + "</td><td>" + item.tname + "</td>";
+			if (item.status == 1) {
+				str += '<td class="green">已上架</td><td><a href="javascript:void(0)" class="red" onclick="changeStatus(this,' + item.tno + ', 0)">[下架]</a></td>';
+			} else {
+				str += '<td class="red">已下架</td><td><a href="javascript:void(0)" class="green" onclick="changeStatus(this,' + item.tno + ', 1)">[上架]</a></td>';
+			}
+			str += "</tr>";
+		})
+		$("#goodstype_info").html("").append($(str));
+	}, "json")
+}
+
+function addGoodsType() {
+	var tname = $.trim($("#tname").val());
+	
+	if (tname == "") {
+		return;
+	}
+	
+	$.post("../../type", {op:"add", tname: tname}, data => {
+		data = parseInt($.trim(data));
+		if (data > 0) {
+			$("#tname").val("");
+			finds();
+		} else {
+			alert("添加失败，请稍后重试...");
+		}
+	}, "json");
+}
+
+
+function changeStatus(obj, tno, status) {
+	var temp = ["下架", "上架"];
+	if (!confirm("您确定要 [" + temp[status] + "] 此类型吗?")) {
+		return;
+	}
+	$.post("../../type", {op: "update", tno: tno, flag: status}, data => {
+		data = parseInt($.trim(data));
+		if (data > 0) {
+			if (status == 1) { // 说明是解冻
+				$(obj).parent().prev("td").attr("class", "green").text("已上架");
+				$(obj).attr("onclick", "changeStatus(this, " + tno + ", 0)").text("[下架]").attr("class", "red");
+			} else {
+				$(obj).parent().prev("td").attr("class", "red").text("已下架");
+				$(obj).attr("onclick", "changeStatus(this, " + tno + ", 1)").text("[上架]").attr("class", "green");
+			}
+			return;
+		}
+		alert("操作失败，请稍后重试...");
+	}, "text");	
+}
+</script>
 </body>
 </html>

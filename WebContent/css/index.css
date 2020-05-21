@@ -227,13 +227,14 @@ article {
 	filter:alpha(brightness(.8))
 }
 
-.hot_box p{
+.hot_warp span{
 	text-align: center;
 	width: 230px;
 	overflow: hidden;
 	text-overflow:ellipsis;
 	white-space: nowrap;
 	margin-top: 20px;
+	display: block;
 }
 
 .view_info {

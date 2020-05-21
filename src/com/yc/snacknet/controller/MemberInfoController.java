@@ -36,12 +36,31 @@ public class MemberInfoController extends BasicController{
 			findByPageFirst(request, response);
 		} else if ("findByPage".equals(op)) {  // 后台分页查询
 			findByPage(request, response);
-		} 
+		} else if ("update".equals(op)) { // 修改状态
+			update(request, response);
+		} else if ("resetPwd".equals(op)) { // 重置密码
+			resetPwd(request, response);
+		}
 	
 	}
 
+	private void resetPwd(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		int mno = Integer.parseInt(request.getParameter("mno"));
+		
+		MemberInfoDao memberInfoDao = new MemberInfoDao();
+		this.send(response, memberInfoDao.resetPwd(mno));
+	}
+
+	private void update(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		int mno = Integer.parseInt(request.getParameter("mno"));
+		int flag = Integer.parseInt(request.getParameter("flag"));
+		
+		MemberInfoDao memberInfoDao = new MemberInfoDao();
+		this.send(response, memberInfoDao.update(mno, flag));
+	}
+
 	/**
-	 * 后天管理员分页查询
+	 * 后台管理员分页查询
 	 * @param request
 	 * @param response
 	 * @throws IOException 
@@ -110,7 +129,7 @@ public class MemberInfoController extends BasicController{
 			this.send(response, 200); // 成功
 			return;
 		}
-		this.send(response, 101); // 注账或密码错误
+		this.send(response, 101); // 账号或密码错误
 	}
 
 	/**
