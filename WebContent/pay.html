@@ -19,9 +19,8 @@
     	<a href="#" target="_blank" class="location">衡阳</a>
         
         <div class="header-info">
-            <div class="login-info">
-            	<a href="login.html" title="点击登录">您好，请登录</a>
-                <a href="register.html" title="点击注册"> 免费注册 </a>
+            <div class="login-info" id="login_info">
+            
             </div>
             
             <div class="person-info">
@@ -59,16 +58,6 @@
             </div>
             
             <div class="search_item" id="search_item">
-            	<a href="#" class="selected">全部</a>
-            	<a href="#">干果</a>
-                <a href="#">麻辣</a>
-                <a href="#">水果</a>
-                <a href="#">饼干</a>
-                <a href="#">奶制品</a>
-                <a href="#">饮料</a>
-                <a href="#">干果</a>
-                <a href="#">麻辣</a>
-                <a href="#">水果</a>
             </div>
         </div>
     </div>
@@ -83,8 +72,8 @@
     <input type="hidden" id="current_addr"/>
     <dl id="addr_list">
         <dt>寄送到：</dt>
-        <dd class="default_location">北京市 海淀区 东北旺西路8号中关村软件园 （李思 收） 159****0775 </dd>
-        <dd class="current_location">北京市 海淀区 东北旺西路8号中关村软件园 （李思 收） 159****0775</dd>
+        <!-- <dd class="default_location">北京市 海淀区 东北旺西路8号中关村软件园 （李思 收） 159****0775 </dd>
+        <dd class="current_location">北京市 海淀区 东北旺西路8号中关村软件园 （李思 收） 159****0775</dd> -->
     </dl>
     <a href="javascript:showAddrDiv()" class="edit_site">编辑收货地址</a>
 </div>
@@ -126,11 +115,11 @@
 <h3 class="common_title">支付方式</h3>	
 <div class="common_list_con clearfix">
     <div class="pay_style_con clearfix">
-        <input type="radio" name="pay_style" checked>
+        <input type="radio" name="pay_style">
         <label class="cash">货到付款</label>
         <input type="radio" name="pay_style">
         <label class="weixin">微信支付</label>
-        <input type="radio" name="pay_style">
+        <input type="radio" name="pay_style" checked> 
         <label class="zhifubao"></label>
         <input type="radio" name="pay_style">
         <label class="bank">银行卡支付</label>
@@ -147,7 +136,7 @@
         <li class="col04">数量</li>
         <li class="col05">小计</li>		
     </ul>
-    <ul class="goods_list_td clearfix">
+    <!-- <ul class="goods_list_td clearfix">
         <li class="col01">1</li>			
         <li class="col02"><img src="images/goods/good03.jpg"></li>
         <li class="col03">辣条</li>
@@ -155,34 +144,25 @@
         <li class="col05">16.80元</li>
         <li class="col06">1</li>
         <li class="col07">16.80元</li>	
-    </ul>
-    <ul class="goods_list_td clearfix">
-        <li class="col01">2</li>			
-        <li class="col02"><img src="images/goods/good02.jpg"></li>
-        <li class="col03">多味泡泡糖</li>
-        <li class="col04">500g</li>
-        <li class="col05">16.80元</li>
-        <li class="col06">1</li>
-        <li class="col07">16.80元</li>	
-    </ul>
+    </ul> -->
 </div>
  
 <!-- 金额结算 -->	
 <h3 class="common_title">总金额结算</h3>
 <div class="common_list_con clearfix">
     <div class="settle_con">
-        <div class="total_goods_count">共<em id="totalcount"></em>件商品，总金额<b id="total_price"></b></div>
+        <div class="total_goods_count">共<em id="totalcount"></em>件商品，总金额<b id="total_price"></b> 元</div>
         <div class="transit">运费：<b>10元</b></div>
-        <div class="total_pay">实付款：<b id="total_pay"></b></div>
+        <div class="total_pay">实付款：<b id="total_pay"></b> 元</div>
     </div>
 </div>
 <div class="order_submit clearfix">
-    <a href="javascript:void(0);" id="order_btn">提交订单</a>
+    <a href="javascript:void(0);" id="order_btn" onclick="orderPay()">提交订单</a>
 </div>	
 
 <div class="popup_con">
     <div class="popup">
-        <p>订单提交成功，3秒后自动跳转到首页...</p>
+        <p>订单提交成功，请支付...</p>
     </div>
     <div class="mask"></div>
 </div>    
@@ -199,9 +179,147 @@
 </footer>
 
 <script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/checkLogin.js"></script>
 <script src="js/addr.js"></script>
-
 <script type="text/javascript">
+var cnos = "";
+$(function(){
+	// 获取购买的商品信息
+	cnos = location.hash.replace("#", "");
+	if (cnos == "") {
+		location.href="index.html";
+		return;
+	}
+	
+	$.post("cart", {op: "findByCnos", cnos: cnos}, function(result){
+		if (result.code == 100) {
+			location.href="index.html";
+			return;
+		} 
+		
+		var total = 0;
+		var totalPrice = 0;
+		var str = '';
+		$.each(result.data, function(index, item) {
+			str += '<ul class="goods_list_td clearfix"><li class="col01">'+(index + 1)+'</li>	';
+			str += '<li class="col02"><img src="../../'+item.pics.split(";")[0]+'"></li>';
+			str += '<li class="col03">'+item.gname+'</li><li class="col04">'+item.weight+'</li>';
+			str += '<li class="col05">'+item.price+'元</li><li class="col06">'+item.num+'</li>';
+			str += '<li class="col07">'+(item.num * item.price).toFixed(2)+'元</li></ul>';
+			total += parseInt(item.num);
+			totalPrice += item.num * item.price
+		})
+		$("#order_list").append($(str));
+		$("#totalcount").text(total);
+		$("#total_price").text(totalPrice.toFixed(2));
+		$("#total_pay").text((totalPrice + 10).toFixed(2));
+	}, "json");
+	
+	// 获取收货地址信息
+	$.post("addr", {op: "findByMno"}, result => {
+		if (result.code == 200) {
+			var str = "";
+			var temp = "";
+			$.each(result.data, function(index, item) {
+				if (item.flag == 1) { // 说明是默认地址
+					$("#default_addr").val(item.ano);
+					$("#current_addr").val(item.ano);
+					str += '<dd class="default_location" data-id="' + item.ano + '">' + item.province + '&nbsp;' + item.city + '&nbsp;' + item.area + '&nbsp;';
+					str += item.addr + '&nbsp;&nbsp;[' + item.name + '&nbsp;收]&nbsp;&nbsp;' + item.tel + '&nbsp;<span>默认收货地址</span>';
+					str += '<a href="javascript:void(0)" onclick="setCurrentAddr(this, \''+item.ano+'\')">设为当前收货地址</a></dd>';
+				} else {
+					temp += '<dd>' + item.province + '&nbsp;' + item.city + '&nbsp;' + item.area + '&nbsp;';
+					temp += item.addr + '&nbsp;&nbsp;[' + item.name + '&nbsp;收]&nbsp;&nbsp;' + item.tel + '&nbsp;';
+					temp += '<a href="javascript:void(0)" onclick="setDefaultAddr(this,\''+item.ano+'\')">设为默认</a>';
+					temp += '<a href="javascript:void(0)" onclick="setCurrentAddr(this, \''+item.ano+'\')">设为当前收货地址</a></dd>';
+				}
+			})
+			str += temp;
+			$("#addr_list").append($(str));
+		} else {
+			location.href="login.html";
+		}
+	}, "json");
+})
+
+function addAddr() {
+	var name = $.trim($("#addr_name").val());
+	var tel =  $.trim($("#addr_tel").val());
+	var province =  $.trim($("#province").val());
+	var city =  $.trim($("#city").val());
+	var area =  $.trim($("#area").val());
+	var addr =  $.trim($("#addr_addr").val());
+	
+	if (name == "" ||  tel == "" || addr == "" || province == '--请选择省份--' || city == '--请选择城市--' || area == '--请选择地区--') {
+		return;
+	}
+	
+	var obj = $("#myform").serialize();
+	var ano = new Date().getTime();
+	var mno = $("#login_mno").val();
+	obj += "&ano="+ano + "&op=add&mno=" + mno;
+	
+	$.post("addr", obj, function(data){
+		data = parseInt($.trim(data));
+		if (data == -2) {
+			alert("您输入的信息不完整，请确认后重新提交...");
+		} else if (data <= 0) {
+			alert("地址信息添加失败，请稍后重试....");
+		} else {
+			var dd = $("#addr_list>dd[class='current_location']");
+			var str = '<a href="javascript:void(0)" onclick="setCurrentAddr(this, \'' + $(dd).data("id") + '\')">设为当前收货地址</a>';
+			$(dd).append($(str));
+			$("#addr_list>dd").removeClass("current_location");
+			
+			var str = '<dd class="current_location" data-id="' + ano + '">' + province + '&nbsp;' + city + '&nbsp;' + area + '&nbsp;' + addr;
+			str += '&nbsp;&nbsp;[' + name + '&nbsp;收]&nbsp;&nbsp;' + tel + '&nbsp';
+			str += '<a href="javascript:void(0)" onclick="setDefaultAddr(this,\''+ano+'\')">设为默认</a></dd>';
+			$("#myform")[0].reset();
+			$("#addr_list").append($(str));
+			$("#addr_div").css("display", "none");
+			$("#current_addr").val(ano);
+		}
+	}, "text");
+}
+
+// 设为默认值
+function setDefaultAddr(obj, ano) {
+	var anos = ano;
+	var dano = $.trim($("#default_addr").val());
+	if (dano != "") {
+		anos += "," + dano;
+	}
+	
+	$.post("addr", {op:"update", anos: anos}, function(data) {
+		data = parseInt($.trim(data));
+		if (data > 0) {
+			$("#default_addr").val(ano);
+			var str = '<a href="javascript:void(0)" onclick="setDefaultAddr(this,\''+ dano + '\')">设为默认</a>';
+			str += '<a href="javascript:void(0)" onclick="setCurrentAddr(this, \''+ dano + '\')">设为当前收货地址</a>';
+			
+			$(".default_location").append($(str)); // 添加默认事件
+			$(".default_location").find("span").remove(); // 移除以前的默认地址标签
+			$(".default_location").removeClass("default_location"); // 移除默认
+			
+			// 在当前地址后面加上 默认地址标签
+			$(obj).parent().append("<span>默认收货地址</span>").addClass("default_location");
+			// 当前这个设为默认的超链接移除
+			$(obj).parent().find("a").remove();
+			
+		}
+	},"text");
+}
+
+// 设置为当前收货地址
+function setCurrentAddr(obj, ano) {
+	$("#current_addr").val(ano);
+	var dd = $("#addr_list>dd[class='current_location']");
+	var str = '<a href="javascript:void(0)" onclick="setCurrentAddr(this, \'' + $(dd).data("id") + '\')">设为当前收货地址</a>';
+	$(dd).append($(str));
+	$("#addr_list>dd").removeClass("current_location");
+	$(obj).parent().addClass("current_location");
+	$(obj).remove();
+}
 
 function showAddrDiv() {
 	$("#addr_div").css("display", "block");
@@ -209,6 +327,33 @@ function showAddrDiv() {
 
 function hiddenDiv() {
 	$("#addr_div").css("display", "none");
+}
+
+function orderPay() {
+	var ano = $("#current_addr").val() || $("#default_addr").val();
+	if (ano == "") {
+		alert("请选择收货地址...");
+		return;
+	}
+	var price = $("#total_pay").text();
+	$.post("order", {op:"add", cnos:cnos, ano:ano, price: price}, result => {
+		if (result.code == 101) {
+			alert("您输入的信息不完整...");
+			return;
+		}
+		
+		if (result.code == 200){
+			$('.popup_con').fadeIn('fast', function() {
+				setTimeout(function(){
+					$('.popup_con').fadeOut('fast',function(){
+						location.href = 'alipay?ono=' + result.data +"&price=" + price;
+					});	
+				}, 2000)
+			});
+		} else {
+			alert("下单失败，请稍后重试...");
+		}
+	}, "json");
 }
 </script>
 </body>

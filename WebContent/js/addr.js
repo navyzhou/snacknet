@@ -65,7 +65,7 @@ window.onload=function(){
 			}
 		}
 	}
-	xmlhttp.open("GET","../xml/city.xml",true); //异步
+	xmlhttp.open("GET","xml/city.xml",true); //异步
 	xmlhttp.send(null);
 }
 

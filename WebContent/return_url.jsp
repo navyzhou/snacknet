@@ -1,3 +1,4 @@
+<%@page import="com.yc.snacknet.dao.OrderInfoDao"%>
 <%@page import="com.yc.snacknet.controller.AlipayConfig"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
@@ -39,12 +40,13 @@
 	}
 
 	boolean signVerified = AlipaySignature.rsaCheckV1(params, AlipayConfig.alipay_public_key, AlipayConfig.charset, AlipayConfig.sign_type); //调用SDK验证签名
-
+	//商户订单号
+	String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
+	OrderInfoDao orderInfoDao = new OrderInfoDao();
+	orderInfoDao.update(out_trade_no, 2); // 修改订单转态
+	
 	//——请在这里编写您的程序（以下代码仅作参考）——
 	if (signVerified) {
-		//商户订单号
-		String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
-
 		//支付宝交易号
 		String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"), "UTF-8");
 

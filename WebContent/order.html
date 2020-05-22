@@ -19,9 +19,8 @@
     	<a href="#" target="_blank" class="location">衡阳</a>
         
         <div class="header-info">
-            <div class="login-info">
-            	<a href="login.html" title="点击登录">您好，请登录</a>
-                <a href="register.html" title="点击注册"> 免费注册 </a>
+            <div class="login-info" id="login_info">
+            	
             </div>
             
             <div class="person-info">
@@ -59,16 +58,6 @@
             </div>
             
             <div class="search_item" id="search_item">
-            	<a href="#" class="selected">全部</a>
-            	<a href="#">干果</a>
-                <a href="#">麻辣</a>
-                <a href="#">水果</a>
-                <a href="#">饼干</a>
-                <a href="#">奶制品</a>
-                <a href="#">饮料</a>
-                <a href="#">干果</a>
-                <a href="#">麻辣</a>
-                <a href="#">水果</a>
             </div>
         </div>
     </div>
@@ -85,7 +74,11 @@
     </ul>
 </div>
 <div class="order_list_con" id="order_list">
-    <div class="order_title">2019-12-12&nbsp;&nbsp;&nbsp;&nbsp; 订单号：2132342432434343<a href="">去支付</a></div>
+   
+    <!-- <div class="order_title">
+    	<span>订单号：4355464646464364</span><span>下单日期： 2020-12-18</span><span>订单总额：<b style="color:red">800</b> 元</span>
+    	<a>已支付</a>
+    </div>
     <ul class="goods_list_td clearfix">
         <li class="col01">1</li>			
         <li class="col02"><img src="images/goods/good12.jpg"></li>
@@ -103,27 +96,7 @@
         <li class="col04">25.80元</li>
         <li class="col03">1</li>
         <li class="col04">25.80元</li>	
-    </ul>
-    
-    <div class="order_title">2019-12-12&nbsp;&nbsp;&nbsp;&nbsp; 订单号：2132342432434343<span>已完成</span></div>
-    <ul class="goods_list_td clearfix">
-        <li class="col01">1</li>			
-        <li class="col02"><img src="images/goods/good12.jpg"></li>
-        <li class="col03">奇异果</li>
-        <li class="col04">500g</li>
-        <li class="col04">25.80元</li>
-        <li class="col03">1</li>
-        <li class="col04">25.80元</li>	
-    </ul>
-    <ul class="goods_list_td clearfix">
-        <li class="col01">1</li>			
-        <li class="col02"><img src="images/goods/good12.jpg"></li>
-        <li class="col03">奇异果</li>
-        <li class="col04">500g</li>
-        <li class="col04">25.80元</li>
-        <li class="col03">1</li>
-        <li class="col04">25.80元</li>	
-    </ul>
+    </ul> -->
 </div>
         
 <footer>
@@ -137,19 +110,54 @@
     <p>电话：0734-8355998 湘ICP备16015987号-1</p>
 </footer>
 <script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/checkLogin.js"></script>
 <script type="text/javascript">
-$('#order_btn').click(function() {
-
-	$('.popup_con').fadeIn('fast', function() {
-
-		setTimeout(function(){
-			$('.popup_con').fadeOut('fast',function(){
-				window.location.href = 'index.html';
-			});	
-		},3000)
+$(function(){
+	$.post("order", {op:"find"}, result => {
+		if (result.code == 100) {
+			location.href="login.html";
+			return;
+		}
 		
-	});
-});
+		var str = "";
+		var status = ["已取消", "去支付", "已支付", "已发货", "已收货"];
+		var ono = "";
+		var idx = 1;
+		$.each(result.data, function(index, item) {
+			if (ono == "") { // 说明是第一次循环
+				idx = 1
+				ono = item.ono;
+				str += '<div class="order_title"><span>订单号：' + item.ono + '</span><span>下单日期： ' + item.odate;
+				str += '</span><span>订单总额：<b style="color:red">' + item.amount + '</b> 元</span>';
+				if (item.status == 1) {
+					str += '<a href="javascript:void(0)" onclick="gotoPay(\'' + item.ono + '\', \'' +  item.amount + '\')">去支付</a></div>';
+				} else {
+					str += '<a>' + status[item.status] + '</a></div>';
+				}
+			} else if (ono != item.ono){ // 说明是另外一个订单了
+				ono = item.ono;
+				idx = 1;
+				str += '<div class="order_title"><span>订单号：' + item.ono + '</span><span>下单日期： ' + item.odate;
+				str += '</span><span>订单总额：<b style="color:red">' + item.amount + '</b> 元</span>';
+				if (item.status == 1) {
+					str += '<a href="javascript:void(0)" onclick="gotoPay(\'' + item.ono + '\', \'' +  item.amount + '\')">去支付</a></div>';
+				} else {
+					str += '<a>' + status[item.status] + '</a></div>';
+				}
+			}
+		    str += '<ul class="goods_list_td clearfix"><li class="col01"> ' + idx + ' </li><li class="col02">';	
+		    str += '<img src="' + item.pics.split(";")[0] + '"></li><li class="col03">' + item.gname + '</li>';
+		    str += '<li class="col04">' +item.weight + ' / ' + item.unit + '</li><li class="col04"> ' + item.price + ' 元</li>'    
+		    str += '<li class="col03">' + item.nums + '</li><li class="col04">' + (item.price * item.nums).toFixed(2) + '元</li></ul>';  
+		    idx += 1;
+		})
+		$("#order_list").html("").append($(str));
+	}, "json")
+})
+
+function gotoPay(ono, amount) {
+	location.href = 'alipay?ono=' + ono +"&price=" + amount;
+}
 </script>
 </body>
 </html>

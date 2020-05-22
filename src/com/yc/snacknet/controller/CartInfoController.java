@@ -27,8 +27,40 @@ public class CartInfoController extends BasicController{
 			update(request, response);
 		} else if ("add".equals(op)) { // 添加
 			add(request, response);
+		} else if ("finds".equals(op)) { // 查询个人购物车信息
+			finds(request, response);
+		} else if ("findByCnos".equals(op)) { // 根据购物车编号查询购物车信息
+			findByCnos(request, response);
 		}
 	
+	}
+
+	private void findByCnos(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String cnos = request.getParameter("cnos");
+		if (StringUtil.checkNull(cnos)) {
+			this.send(response, 100, null);
+			return;
+		} 
+		
+		CartInfoDao cartInfoDao = new CartInfoDao();
+		List<Map<String, String>> list = cartInfoDao.findByCnos(cnos);
+		if (list == null || list.isEmpty()) {
+			this.send(response, 100, null);
+			return;
+		}
+		this.send(response, 200, list);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void finds(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Object obj = request.getSession().getAttribute("currentLoginMember");
+		if (obj == null) { // 说明没有登录
+			this.send(response, 100, null);
+			return;
+		} 
+		Map<String, String> mf = (Map<String, String>) obj;
+		CartInfoDao cartInfoDao = new CartInfoDao();
+		this.send(response, 200, cartInfoDao.finds(mf.get("mno")));
 	}
 
 	private void add(HttpServletRequest request, HttpServletResponse response) throws IOException {

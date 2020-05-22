@@ -1,3 +1,4 @@
+<%@page import="com.yc.snacknet.dao.OrderInfoDao"%>
 <%@page import="com.yc.snacknet.controller.AlipayConfig"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ page import="java.util.*"%>
@@ -42,10 +43,12 @@
 	3、校验通知中的seller_id（或者seller_email) 是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email）
 	4、验证app_id是否为该商户本身。
 	*/
+	//商户订单号
+	String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
+	OrderInfoDao orderInfoDao = new OrderInfoDao();
+	orderInfoDao.update(out_trade_no, 2); // 修改订单转态
 	if (signVerified) {//验证成功
 		//商户订单号
-		String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
-
 		//支付宝交易号
 		String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"), "UTF-8");
 

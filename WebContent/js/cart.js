@@ -4,9 +4,10 @@ function add(obj, cno){
 	//获取购物车中点击的商品数量
 	var num = $(obj).prev().val();
 	num++;
-	
+	opCart(cno, 1);
 	//数量写入标签中
 	$(obj).prev().val(num);	
+	
 	//获取单价
 	var price = $(obj).parent().parent().prev().html();
 	//获取小计
@@ -28,7 +29,7 @@ function lost(obj, cno){
 		return; 
 	}
 	num--;
-	
+	opCart(cno, -1);
 	//数量写入标签中
 	$(obj).next().val(num);	
 	//获取单价
@@ -41,6 +42,25 @@ function lost(obj, cno){
 	$subtotal.text(total.toFixed(2));
 	
 	productCount();
+}
+
+function opCart(cno, num) {
+	$.post("cart", {op: "update", num : num, cno: cno}, result => {
+		 if (result.code == 200) {
+			carts[i].num = parseInt(carts[i].num) + num;
+			$("#iconfont").text(parseInt($("#iconfont").text()) + num);
+			$("#popup_info").text("加入购物车成功...").css("color", "green");;
+		 } else {
+			$("#popup_info").text("加入购物车失败...").css("color", "red");
+		 }
+		 $('.popup_con').fadeIn('fast', function() {
+			setTimeout(function(){
+				$('.popup_con').fadeOut('fast',function(){
+					
+				});	
+			}, 2000)
+		});
+	 }, "json")
 }
 
 //删除商品
@@ -65,11 +85,6 @@ $("#all").click(function(){
 	productCount();
 });
 
-
-$(function(){
-	bindEvent();
-	productCount();
-})
 
 function bindEvent() {
 	var checkboxs = $("#cart_list input[type='checkbox']");

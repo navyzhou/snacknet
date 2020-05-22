@@ -240,6 +240,8 @@
 	border-radius: 2px;
 	width: 200px;
 	height: 24px;
+	font-size: 14px;
+	padding-left: 2px;
 }
 
 #addr_div select{
@@ -247,6 +249,7 @@
 	border-radius: 2px;
 	width: 160px;
 	height: 24px;
+	font-size: 14px;
 }
 
 #addr_div>img {

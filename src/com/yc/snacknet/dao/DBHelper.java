@@ -154,13 +154,13 @@ public class DBHelper {
 			}
 			throw new RuntimeException(e);
 		}finally{
-			this.close(con, pstmt, null);
 			try {
 				con.setAutoCommit(true);
 			} catch (SQLException e) {
 				LogUtil.log.error(e.toString());
 				throw new RuntimeException(e);
 			}
+			this.close(con, pstmt, null);
 		}
 		return result;
 	}
