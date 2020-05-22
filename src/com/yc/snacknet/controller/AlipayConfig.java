@@ -40,8 +40,8 @@ public class AlipayConfig {
 	public static String gatewayUrl = "https://openapi.alipaydev.com/gateway.do";
 
 	// 支付宝网关
-	//public static String log_path = "C:\\";
-	public static String log_path = "/";
+	public static String log_path = "C:\\";
+	// public static String log_path = "/";
 
 	/** 
 	 * 写日志，方便测试（看网站需求，也可以改成把记录存入数据库）

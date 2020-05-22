@@ -25,6 +25,7 @@ public class AliPayController extends BasicController{
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		//商户订单号，商户网站订单系统中唯一订单号，必填
 		String out_trade_no = request.getParameter("ono");
 		//付款金额，必填

@@ -22,6 +22,7 @@ public class BasicController extends HttpServlet{
 	}
 	
 	protected void send(HttpServletResponse response, int result) throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		PrintWriter out = response.getWriter();
 		out.print(result);
 		out.flush();
@@ -29,6 +30,7 @@ public class BasicController extends HttpServlet{
 	}
 	
 	protected void send(HttpServletResponse response, String result) throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		PrintWriter out = response.getWriter();
 		out.print(result);
 		out.flush();
@@ -36,6 +38,7 @@ public class BasicController extends HttpServlet{
 	}
 	
 	protected void send(HttpServletResponse response, Object obj) throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		PrintWriter out = response.getWriter();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		out.print(gson.toJson(obj));
@@ -44,6 +47,7 @@ public class BasicController extends HttpServlet{
 	}
 	
 	protected void send(HttpServletResponse response, int code, Object obj) throws IOException {
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", code);
 		map.put("data", obj);
