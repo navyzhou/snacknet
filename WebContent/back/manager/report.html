@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div class="box_bottom pb5 pt5 pr10" style="border-top:1px solid #dadada;">
+	<div class="search_bar_btn" style="text-align:left;">
+		
+		<label> &nbsp;年份：<select name="year" class="select" id="year_select"> 
+			<option value="">-- 请选择 --</option>
+		</select> </label>
+		<input type="button" value="营业额统计" onclick="totalReport()"  class="ext_btn ext_btn_submit">
+		<input type="button" class="ext_btn ext_btn_success" onclick="totalReportByType()" value="商品类型统计">
+		<input type="button" class="ext_btn ext_btn_error" value="商品统计">
+	</div>
+</div>
+
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id=report_div style="width: 100%;height:560px;">
+</div>
+<script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../js/echarts.min.js"></script>
+<script type="text/javascript">
+// 基于准备好的dom，初始化echarts实例
+var myChart = echarts.init(document.getElementById('report_div'));
+var types = [];
+$(function(){
+	var year = new Date().getFullYear();
+	var str = "";
+	for (var i = year; i >= 2019; i --) {
+		str += "<option value='" + i + "'>" + i + "</option>";
+	}
+	$("#year_select").append($(str));
+	
+	$.post("../../type", {op:"finds"}, result => {
+		$.each(result, function(index, item) {
+			types.push(item.tname);
+		})
+	}, "json");
+})
+
+function totalReport() {
+	var year = $.trim($("#year_select").val());
+	
+	$.post("../../report", {op: "findt", year:year}, result => {
+		var years = [];
+		var datas = [];
+		if (year == "") {
+			$.each(result, function(index, item) {
+				years.push(item.year);
+				datas.push(item.price);
+			})
+			barShow("年份", years, "总额", datas);
+		} else {
+			$.each(result, function(index, item) {
+				years.push(item.year);
+				datas.push(item.price);
+			})
+			barShow("月份", years, "总额", datas);
+		}
+	}, "json");
+}
+
+
+function totalReportByType() {
+	var year = $.trim($("#year_select").val());
+	var flag = year == "" ? "年" : "月";
+	
+	$.post("../../report", {op: "findByType", year:year}, result => {
+		var datas = [];
+		var series = [];
+		datas.push(["商品类型"]);
+		types.forEach((item, index)=>{
+			datas[item] = [item];
+		});
+		
+		var temp = "";
+		$.each(result, function(index, item) {
+			if (temp == "") { // 说明是第一次循环
+				series.push({type: 'bar'})
+				temp = item.year + flag;
+				datas[0].push(temp);
+				
+				types.forEach((itm, idx)=>{ // 每个类型初始额为0
+					datas[itm].push(0);
+				});
+			} else if (temp != item.year) { // 说明是换了一年了
+				temp = item.year + flag;
+				datas[0].push(temp);
+				series.push({type: 'bar'})
+				
+				types.forEach((itm, idx)=>{ // 每个类型初始额为0
+					datas[itm].push(0);
+				});
+			}
+			datas[item.tname][datas[item.tname].length - 1] = item.price;
+		})
+		
+		var dataset = [];
+		dataset.push(datas[0]);
+		types.forEach((itm, idx)=>{ // 每个类型初始额为0
+			dataset.push(datas[itm]);
+		});
+		mbarShow(dataset, series);
+	}, "json");
+}
+
+function mbarShow(dataset, series) {
+	option = {
+		legend: {},
+		tooltip: {show: true},
+	    dataset: {
+	        source: dataset
+	    },
+	    xAxis: {
+	    	type: 'category',
+	    	name: "商品类型",
+	    },
+	    yAxis: {
+	    	name: "总额",
+	    },
+	    series: series
+	};
+	// 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option, true);
+}
+
+function barShow(xname, xdata, yname, ydata) {
+	option = {
+	    xAxis: {
+	        type: "category",
+	        name: xname,
+	        data: xdata
+	    },
+	    yAxis: {
+	    	name: yname,
+	        type: "value"
+	    },
+	    series: [{
+	        data: ydata,
+	        type: 'bar',
+	        showBackground: true,
+	        backgroundStyle: {
+	            color: 'rgba(220, 220, 220, 0.8)'
+	        }
+	    }],
+	    tooltip : {
+	    	trigger: 'axis',
+	    	formatter:function(params){
+	    		return params[0].data + "元";
+	    	},
+	    	textStyle:{
+	    	　　align:'left'
+	    	},
+	    },
+	};
+	
+	// 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option, true);
+}
+
+</script>
+</body>
+</html>
