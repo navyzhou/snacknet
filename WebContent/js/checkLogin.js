@@ -1,6 +1,6 @@
 $(function(){
 	// 顶部商品类型信息
-	$.get("type", {op:"finds"}, result => {
+	$.get("type", {op:"finds"}, function(result){
 		var str = '<a href="javascript:void(0)" class="selected" data-id="" onclick="findByTno(this, 0)">全部</a>';
 		$.each(result, function(index, item) {
 			str += '<a href="javascript:void(0)" data-id="' + item.tno + '" onclick="findByTno(this, ' + item.tno + ')">' + item.tname + '</a>';
@@ -9,7 +9,7 @@ $(function(){
 	}, "json");
 	
 	
-	$.get("member", {op:"check"}, result => {
+	$.get("member", {op:"check"}, function(result){
 		var str = "";
 		if (result.code == 200) {
 			str += '<a href="#">欢迎您 &nbsp;[' + result.data.nickname + ']</a>';
@@ -26,7 +26,7 @@ $(function(){
 
 var carts = [];
 function getCartInfo(mno) {
-	$.post("cart", {op:"get", mno:mno}, result => {
+	$.post("cart", {op:"get", mno:mno}, function(result) {
 		if (result.code == 200) {
 			var total = 0;
 			carts = result.data;

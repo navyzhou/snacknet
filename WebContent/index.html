@@ -137,7 +137,7 @@ var page = 1;
 var rows = 20;
 var totalPage = 1;
 $(function(){
-	$.post("goods",{op:"findFirst", page: page, rows: rows}, result => {
+	$.post("goods",{op:"findFirst", page: page, rows: rows}, function(result){
 		totalPage = Math.ceil(result.code / rows);
 		showPage(); // 显示分页下标
 		showGoods(result.data); // 显示数据
@@ -195,7 +195,7 @@ function findByPage(obj, flag) {
 	var tno =$("#search_item>a[class='selected']").data("id");
 	var gname = $.trim($("#search_content").val());
 	
-	$.post("goods",{op:"finds", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, result => {
+	$.post("goods",{op:"finds", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, function(result) {
 		showGoods(result); // 显示数据
 	}, "json");
 }
@@ -212,7 +212,7 @@ function searchGoods() {
 	var eprice = $.trim($("#end_price").val());
 	var tno =$("#search_item>a[class='selected']").data("id");
 	
-	$.post("goods",{op:"findFirst", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, result => {
+	$.post("goods",{op:"findFirst", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, function(result) {
 		totalPage = Math.ceil(result.code / rows);
 		showPage(); // 显示分页下标
 		showGoods(result.data); // 显示数据
@@ -228,7 +228,7 @@ function findByTno(obj, tno) {
 	var eprice = $.trim($("#end_price").val());
 	var gname = $.trim($("#search_content").val());
 		
-	$.post("goods",{op:"findFirst", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, result => {
+	$.post("goods",{op:"findFirst", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, function(result) {
 		totalPage = Math.ceil(result.code / rows);
 		showPage(); // 显示分页下标
 		showGoods(result.data); // 显示数据
@@ -245,7 +245,7 @@ function findByPrice() {
 	var tno =$("#search_item>a[class='selected']").data("id");
 	var gname = $.trim($("#search_content").val());
 	
-	$.post("goods",{op:"findFirst", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, result => {
+	$.post("goods",{op:"findFirst", page: page, rows: rows, tno:tno, sprice:sprice, eprice:eprice, gname:gname}, function(result) {
 		totalPage = Math.ceil(result.code / rows);
 		showPage(); // 显示分页下标
 		showGoods(result.data); // 显示数据

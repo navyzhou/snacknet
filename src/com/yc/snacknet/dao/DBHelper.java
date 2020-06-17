@@ -33,7 +33,7 @@ public class DBHelper {
 			con=DriverManager.getConnection(ReadPro.getInstance().getProperty("url"), ReadPro.getInstance());
 		} catch (SQLException e) {
 			LogUtil.log.error(e.toString());
-			throw new RuntimeException(e);
+			//throw new RuntimeException(e);
 		}
 		return con;
 	}
