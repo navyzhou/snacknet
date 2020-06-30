@@ -151,6 +151,7 @@
 <script src="js/addCart.js" type="text/javascript"></script>
 <script>
 var price = 0;
+var reg = /<[^><]*script[^><]*>/img;
 $(function(){
 	var gno = $.trim(location.hash.replace("#",""));
 	if (gno == "") {
@@ -164,13 +165,13 @@ $(function(){
 			return;
 		}
 		price = result.price;
-		$("#view_gname").text(result.gname);
-		$("#view_intro").text(result.intro);
+		$("#view_gname").text(result.gname.replace(reg, ""));
+		$("#view_intro").text(result.intro.replace(reg, ""));
 		$("#view_price").text(result.price);
-		$("#view_unit").text(result.weight + "/" + result.unit);
-		$("#store_num").text(result.balance + "" + result.unit );
+		$("#view_unit").text(result.weight.replace(reg, "") + "/" + result.unit.replace(reg, ""));
+		$("#store_num").text(result.balance.replace(reg, "") + "" + result.unit.replace(reg, "") );
 		$("#total_price").text( (result.price * $("#goods_count").val()).toFixed(2) );
-		$("#view_descr").append($(result.descr));
+		$("#view_descr").append($(result.descr.replace(reg, "")));
 		
 		$("#add_cart").attr("onclick", "addCart(" + result.gno + ")")
 		
@@ -187,7 +188,7 @@ $(function(){
 		var str = "";
 		$.each(result, function(index, item) {
 			 str += '<li><a href="detail.html#'+ item.gno +'" target="_blank"><img src="' + item.pics.split(";")[0] + '"></a>';
-             str += '<h4><a href="detail.html#'+ item.gno +'" target="_blank>' + item.gname + '</a></h4><div class="prize">&yen;' + item.price + '</div></li>';
+             str += '<h4><a href="detail.html#'+ item.gno +'" target="_blank>' + item.gname.replace(reg, "") + '</a></h4><div class="prize">&yen;' + item.price + '</div></li>';
 		})
 		$("#news_goods").html("").append($(str));
 	}, "json");

@@ -41,6 +41,7 @@
 </div>
 <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
+var reg = /<[^><]*script[^><]*>/img;
 function addAdminnfo() {
 	var aname = $.trim($("#aname").val());
 	var pwd = $.trim($("#pwd").val());
@@ -48,6 +49,11 @@ function addAdminnfo() {
 
 	if (aname == "" || pwd == "" || tel == "") {
 		alert("您输入的信息不完整...");
+		return;
+	}
+	
+	if (reg.test(aname) || reg.test(pwd) || reg.test(tel)) {
+		alert("您输入的信息不安全...");
 		return;
 	}
 	
@@ -73,7 +79,7 @@ function finds() {
 	$.get("../../admin", {op: "finds"}, data => {
 		var str = "";
 		$.each(data, (index, item) => {
-			str += "<tr><td>" + item.aid + "</td><td>" + item.aname + "</td><td>" + item.tel + "</td>"
+			str += "<tr><td>" + item.aid + "</td><td>" + item.aname.replace(reg, "") + "</td><td>" + item.tel.replace(reg, "") + "</td>"
 			if (item.status == 1) {
 				str += "<td class='green'>正常</td><td><a href='javascript:void(0)' onclick='changeStatus(this, " + item.aid + ",0)'>[冻结]</a>";
 			} else {

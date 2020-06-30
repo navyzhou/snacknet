@@ -39,6 +39,8 @@
 </div>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript">
+var reg = /<[^><]*script[^><]*>/img;
+
 $(function(){
 	finds();
 })
@@ -47,7 +49,7 @@ function finds() {
 	var str = "";
 	$.get("../../type", {op:"finds"}, result => {
 		$.each(result, function(index, item) {
-			str += "<tr><td>" + item.tno + "</td><td>" + item.tname + "</td>";
+			str += "<tr><td>" + item.tno + "</td><td>" + item.tname.replace(reg, "") + "</td>";
 			if (item.status == 1) {
 				str += '<td class="green">已上架</td><td><a href="javascript:void(0)" class="red" onclick="changeStatus(this,' + item.tno + ', 0)">[下架]</a></td>';
 			} else {
@@ -61,7 +63,11 @@ function finds() {
 
 function addGoodsType() {
 	var tname = $.trim($("#tname").val());
-	
+
+	if (reg.test(tname)) {
+		alert("您输入的信息不安全...");
+		return;
+	}
 	if (tname == "") {
 		return;
 	}

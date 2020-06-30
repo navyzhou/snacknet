@@ -1,9 +1,11 @@
 $(function(){
+	var reg = /<[^><]*script[^><]*>/img;
+	
 	// 顶部商品类型信息
 	$.get("type", {op:"finds"}, function(result){
 		var str = '<a href="javascript:void(0)" class="selected" data-id="" onclick="findByTno(this, 0)">全部</a>';
 		$.each(result, function(index, item) {
-			str += '<a href="javascript:void(0)" data-id="' + item.tno + '" onclick="findByTno(this, ' + item.tno + ')">' + item.tname + '</a>';
+			str += '<a href="javascript:void(0)" data-id="' + item.tno + '" onclick="findByTno(this, ' + item.tno + ')">' + item.tname.replace(reg, ""); + '</a>';
 		})
 		$("#search_item").html("").append($(str));
 	}, "json");
@@ -12,7 +14,7 @@ $(function(){
 	$.get("member", {op:"check"}, function(result){
 		var str = "";
 		if (result.code == 200) {
-			str += '<a href="#">欢迎您 &nbsp;[' + result.data.nickname + ']</a>';
+			str += '<a href="#">欢迎您 &nbsp;[' + result.data.nickname.replace(reg, ""); + ']</a>';
 			str += '<a href="#">注销</a> <a href="register.html">注册</a>';
 			str += "<input id='login_mno' type='hidden' value='" + result.data.mno + "'/>"
 			

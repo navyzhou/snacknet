@@ -97,6 +97,7 @@
 <script src="../../ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 CKEDITOR.replace( 'editor1' );
+var reg = /<[^><]*script[^><]*>/img;
 
 $(function() {
 	$.get("../../type", {op:"finds"}, result => {
@@ -118,6 +119,12 @@ function addGoodsInfo() {
 	var weight = $.trim($("#weight").val());
 	var intro = $.trim($("#intro").val());
 	var descr = CKEDITOR.instances.editor1.getData();
+	
+	if (reg.test(gname) || reg.test(price) || reg.test(balance) || reg.test(unit) || reg.test(qperied) 
+			|| reg.test(weight) || reg.test(intro) || reg.test(descr)) {
+		alert("您输入的信息不安全...");
+		return;
+	}
 	
 	$.ajaxFileUpload({
 		url:'../../goods?op=add',

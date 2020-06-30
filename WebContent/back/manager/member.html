@@ -64,6 +64,8 @@
 var page = 1;
 var rows = 10;
 var totalPage = 1;
+var reg = /<[^><]*script[^><]*>/img;
+
 $(function(){
 	$.post("../../member",{op:"findByPageFirst", page: page, rows: rows}, result => {
 		totalPage = Math.ceil(result.code / rows);
@@ -75,8 +77,8 @@ $(function(){
 function memberShow(rows) {
 	var str = "";
 	$.each(rows, function(index, item) {
-		str += "<tr><td>" + item.mno + "</td><td>" + item.nickname + "</td><td>" + item.realname + "</td>";
-		str += "<td>" + item.tel + "</td><td>" + item.email + "</td><td> " + item.regdate + "</td>";
+		str += "<tr><td>" + item.mno + "</td><td>" + item.nickname.replace(reg, "") + "</td><td>" + item.realname.replace(reg, "") + "</td>";
+		str += "<td>" + item.tel.replace(reg, "") + "</td><td>" + item.email.replace(reg, "") + "</td><td> " + item.regdate.replace(reg, "") + "</td>";
 		if (item.status == 1) {
 			str += "<td class='green'>正常</td>";
 		} else {
@@ -131,6 +133,12 @@ function searchMember() {
 	page = 1;
 	var mname = $.trim($("#mname").val());
 	var tel = $.trim($("#tel").val());
+	
+	if (reg.test(mname) || reg.test(tel)) {
+		alert("您输入的信息不安全...");
+		return;
+	}
+	
 	$.post("../../member",{op:"findByPageFirst", page: page, rows: rows, nickName:mname, tel:tel}, result => {
 		totalPage = Math.ceil(result.code / rows);
 		showPage(); // 显示分页下标

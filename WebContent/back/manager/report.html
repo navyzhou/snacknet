@@ -27,6 +27,8 @@
 // 基于准备好的dom，初始化echarts实例
 var myChart = echarts.init(document.getElementById('report_div'));
 var types = [];
+var reg = /<[^><]*script[^><]*>/img;
+
 $(function(){
 	var year = new Date().getFullYear();
 	var str = "";

@@ -112,6 +112,7 @@
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/checkLogin.js"></script>
 <script type="text/javascript">
+var reg = /<[^><]*script[^><]*>/img;
 $(function(){
 	$.post("order", {op:"find"}, result => {
 		if (result.code == 100) {
@@ -127,18 +128,18 @@ $(function(){
 			if (ono == "") { // 说明是第一次循环
 				idx = 1
 				ono = item.ono;
-				str += '<div class="order_title"><span>订单号：' + item.ono + '</span><span>下单日期： ' + item.odate;
-				str += '</span><span>订单总额：<b style="color:red">' + item.amount + '</b> 元</span>';
+				str += '<div class="order_title"><span>订单号：' + item.ono + '</span><span>下单日期： ' + item.odate.replace(reg, "");
+				str += '</span><span>订单总额：<b style="color:red">' + item.amount.replace(reg, "") + '</b> 元</span>';
 				if (item.status == 1) {
-					str += '<a href="javascript:void(0)" onclick="gotoPay(\'' + item.ono + '\', \'' +  item.amount + '\')">去支付</a></div>';
+					str += '<a href="javascript:void(0)" onclick="gotoPay(\'' + item.ono + '\', \'' +  item.amount.replace(reg, "") + '\')">去支付</a></div>';
 				} else {
 					str += '<a>' + status[item.status] + '</a></div>';
 				}
 			} else if (ono != item.ono){ // 说明是另外一个订单了
 				ono = item.ono;
 				idx = 1;
-				str += '<div class="order_title"><span>订单号：' + item.ono + '</span><span>下单日期： ' + item.odate;
-				str += '</span><span>订单总额：<b style="color:red">' + item.amount + '</b> 元</span>';
+				str += '<div class="order_title"><span>订单号：' + item.ono + '</span><span>下单日期： ' + item.odate.replace(reg, "");
+				str += '</span><span>订单总额：<b style="color:red">' + item.amount.replace(reg, "") + '</b> 元</span>';
 				if (item.status == 1) {
 					str += '<a href="javascript:void(0)" onclick="gotoPay(\'' + item.ono + '\', \'' +  item.amount + '\')">去支付</a></div>';
 				} else {
@@ -146,8 +147,8 @@ $(function(){
 				}
 			}
 		    str += '<ul class="goods_list_td clearfix"><li class="col01"> ' + idx + ' </li><li class="col02">';	
-		    str += '<img src="' + item.pics.split(";")[0] + '"></li><li class="col03">' + item.gname + '</li>';
-		    str += '<li class="col04">' +item.weight + ' / ' + item.unit + '</li><li class="col04"> ' + item.price + ' 元</li>'    
+		    str += '<img src="' + item.pics.split(";")[0] + '"></li><li class="col03">' + item.gname.replace(reg, "") + '</li>';
+		    str += '<li class="col04">' +item.weight.replace(reg, "") + ' / ' + item.unit.replace(reg, "") + '</li><li class="col04"> ' + item.price + ' 元</li>'    
 		    str += '<li class="col03">' + item.nums + '</li><li class="col04">' + (item.price * item.nums).toFixed(2) + '元</li></ul>';  
 		    idx += 1;
 		})

@@ -183,6 +183,7 @@
 <script src="js/addr.js"></script>
 <script type="text/javascript">
 var cnos = "";
+var reg = /<[^><]*script[^><]*>/img;
 $(function(){
 	// 获取购买的商品信息
 	cnos = location.hash.replace("#", "");
@@ -203,7 +204,7 @@ $(function(){
 		$.each(result.data, function(index, item) {
 			str += '<ul class="goods_list_td clearfix"><li class="col01">'+(index + 1)+'</li>	';
 			str += '<li class="col02"><img src="../../'+item.pics.split(";")[0]+'"></li>';
-			str += '<li class="col03">'+item.gname+'</li><li class="col04">'+item.weight+'</li>';
+			str += '<li class="col03">'+item.gname.replace(reg, "")+'</li><li class="col04">'+item.weight.replace(reg, "")+'</li>';
 			str += '<li class="col05">'+item.price+'元</li><li class="col06">'+item.num+'</li>';
 			str += '<li class="col07">'+(item.num * item.price).toFixed(2)+'元</li></ul>';
 			total += parseInt(item.num);
@@ -235,7 +236,7 @@ $(function(){
 				}
 			})
 			str += temp;
-			$("#addr_list").append($(str));
+			$("#addr_list").append($(str.replace(reg, "")));
 		} else {
 			location.href="login.html";
 		}
@@ -249,6 +250,12 @@ function addAddr() {
 	var city =  $.trim($("#city").val());
 	var area =  $.trim($("#area").val());
 	var addr =  $.trim($("#addr_addr").val());
+	
+
+	if (reg.test(name) || reg.test(tel) || reg.test(addr)) {
+		alert("您输入的信息不安全...");
+		return;
+	}
 	
 	if (name == "" ||  tel == "" || addr == "" || province == '--请选择省份--' || city == '--请选择城市--' || area == '--请选择地区--') {
 		return;

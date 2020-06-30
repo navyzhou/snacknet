@@ -70,11 +70,13 @@
 var page = 1;
 var rows = 10;
 var totalPage = 1;
+var reg = /<[^><]*script[^><]*>/img;
+
 $(function(){
 	$.get("../../type", {op:"finds"}, result => {
 		var str = "<option value=''></option>";
 		$.each(result, function(index, item) {
-			str += "<option value='" + item.tno + "'>" + item.tname + "</option>";
+			str += "<option value='" + item.tno + "'>" + item.tname.replace(reg, "") + "</option>";
 		})
 		$("#goodsType").html("").append($(str));
 	}, "json");
@@ -90,8 +92,8 @@ $(function(){
 function showGoods(data) {
 	var str = "";
 	$.each(data, function(index, item) {
-		str += "<tr><td>" + item.gno + "</td><td>" + item.gname + "</td><td>" + item.tname + "</td><td>" + item.price + "</td>";
-		str += "<td>" + item.balance + "</td><td>" + item.unit + "</td><td>" + item.weight + "</td><td>" + item.qperied + "</td>";
+		str += "<tr><td>" + item.gno + "</td><td>" + item.gname.replace(reg, "") + "</td><td>" + item.tname.replace(reg, "") + "</td><td>" + item.price.replace(reg, "") + "</td>";
+		str += "<td>" + item.balance.replace(reg, "") + "</td><td>" + item.unit.replace(reg, "") + "</td><td>" + item.weight.replace(reg, "") + "</td><td>" + item.qperied.replace(reg, "") + "</td>";
 		if (item.status == 1) {
 			str += "<td class='green'>已上架</td><td><a href='javascript:void(0)' onclick='changeStatus(this," + item.gno + ", 0)' class='red'>[下架]</a>";
 		} else {
@@ -141,6 +143,12 @@ function searchGoods() {
 	page = 1;
 	var gname = $.trim($("#gname").val());
 	var tno = $.trim($("#goodsType").val());
+	
+	if (reg.test(gname)) {
+		alert("您输入的信息不安全...");
+		return;
+	}
+	
 	$.post("../../goods",{op:"findByPageFirst", page: page, rows: rows, tno:tno, gname:gname}, result => {
 		totalPage = Math.ceil(result.code / rows);
 		showPage(); // 显示分页下标
